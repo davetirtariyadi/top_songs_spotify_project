@@ -5,9 +5,18 @@ website:
   title: "top_spotify_songs"
   navbar:
     left:
-      - href: index.qmd
-        text: Home
-      - about.qmd
+      - text: Home
+        href: index.qmd
+      - text: About
+        href: about.qmd
+      - text: Exploratory Data Analysis
+        href: eda.qmd
+      - text: Proposal
+        href: proposal.qmd
+      - text: Report
+        href: report.qmd
+      - text: Appendicies
+        href: appendix.qmd
 
 format:
   html:
