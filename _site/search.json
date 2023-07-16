@@ -2,7 +2,7 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "top_spotify_songs",
+    "title": "",
     "section": "",
     "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
   },
@@ -16,8 +16,29 @@
   {
     "objectID": "eda.html",
     "href": "eda.html",
-    "title": "top_spotify_songs",
+    "title": "",
     "section": "",
-    "text": "This is a Quarto website."
+    "text": "This is EDA."
+  },
+  {
+    "objectID": "report.html",
+    "href": "report.html",
+    "title": "",
+    "section": "",
+    "text": "This is Report."
+  },
+  {
+    "objectID": "appendix.html",
+    "href": "appendix.html",
+    "title": "",
+    "section": "",
+    "text": "This is Appendix."
+  },
+  {
+    "objectID": "proposal.html",
+    "href": "proposal.html",
+    "title": "",
+    "section": "",
+    "text": "This is Proposal."
   }
 ]
