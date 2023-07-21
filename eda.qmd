@@ -1,1 +1,154 @@
-This is EDA.
+---
+title: "Exploratory Data Analysis"
+format: html
+execute: 
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: load-pkgs-data
+
+library(tidyverse)
+library(skimr)
+
+theme_set(theme_minimal())
+```
+
+## Introduction and data
+
+### Description of data
+
+We will be analyzing the top 100 songs on Spotify every year, from 2000 - 2023.
+
+The dataset was taken from Kaggle. The data was extracted by Conor Van Eden using Organize Your Music. More details [here](https://www.kaggle.com/datasets/conorvaneden/best-songs-on-spotify-for-every-year-2000-2023?resource=download).
+
+### Glimpse of data
+
+Let's take a look at the dataset using `skim`.
+
+```{r}
+#| label: skim-data
+
+songs <- read_delim("data/Best Songs on Spotify from 2000-2023.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+skim(songs)
+```
+
+We see that we have data on 14 variables: three are character-type and 11 are numeric-type. We have access to some basic information about the songs, including artist, release year, and genre, as well as some metrics, including `danceability` and `speechiness`.
+
+## Exploratory data analysis
+
+### Top artists
+
+```{r}
+
+top_artists <- songs %>% 
+  group_by(artist) %>% 
+  count() %>% 
+  arrange(desc(n)) %>% 
+  head(20) 
+
+top_artists %>% 
+  ggplot(aes(y = fct_reorder(artist, n), x = n)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Most common artists in the list of top songs in Spotify",
+    y = "",
+    x = ""
+  ) +
+  theme_minimal()
+```
+We see that Rihanna, Drake, and Taylor Swift are the three artists with the most mentions. Here, mention refers to having a song categorized as "top" on Spotify in the 2003-2023 period. It is important to note that one song can be mentioned as "top" multiple times. As seen below, Rihanna's Diamonds and Taylor Swift's I Knew You Were Trouble were made it to the list of top songs twice.
+
+```{r}
+songs %>% 
+  filter(artist %in% c("Rihanna", "Drake", "Taylor Swift")) %>% 
+  group_by(artist, title) %>% 
+  count() %>% 
+  arrange(desc(n)) %>% 
+  head()
+```
+
+### Top genres
+
+```{r}
+songs %>% 
+  group_by(`top genre`) %>% 
+  count() %>% 
+  arrange(desc(n)) %>% 
+  head(20) %>% 
+  ggplot(aes(y = fct_reorder(`top genre`, n), x = n)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Most common genres in the list of top songs in Spotify",
+    y = "",
+    x = ""
+  ) +
+  theme_minimal()
+```
+
+We see that "dance pop" and "pop" are the two most common genres within top songs by a large margin. It might be intersting to see what kind of variations exist withing these two genres when it comes to other song metrics like `danceability` and `valence`.
+
+### Most common words in titles
+
+```{r}
+songs %>% 
+  select(title) %>% 
+  separate_rows(title, sep = " ") %>% 
+  unnest(title) %>% 
+  mutate(title = str_remove_all(title, "[[:punct:]]")) %>%
+  filter(title != "") %>% 
+  mutate(title = tolower(title)) %>% 
+  group_by(title) %>% 
+  count() %>% 
+  arrange(desc(n)) %>% 
+  head(30) %>% 
+  ggplot(aes(y = fct_reorder(title, n), x = n)) +
+  geom_bar(stat = "identity")
+
+```
+
+We see that the word "feat" is very common - we love to see collaboration! Furthermore, we also see that the word "you," "me," and "love" are pretty common. It might be interesting to analyze this further.
+
+### Distribution of year
+
+```{r}
+songs %>% 
+  ggplot(aes(x = year)) +
+  geom_histogram() +
+  theme_minimal()
+```
+
+### Distribution of metrics
+
+```{r}
+songs %>% 
+  select(title, bpm, energy, danceability, dB, liveness, valence, duration, acousticness, speechiness, popularity) %>% 
+  pivot_longer(
+    cols = -title,
+    names_to = "metric",
+    values_to = "value"
+  ) %>% 
+  ggplot(aes(x = value)) +
+  geom_histogram() +
+  facet_wrap(vars(metric), scales = "free") +
+  labs(
+    x = "Metric",
+    y = ""
+  )
+```
+
+## Data limitations
+
+- No indication of which year the song is "top" for.
+
+```{r}
+songs %>% 
+  group_by(title) %>% 
+  count() %>% 
+  arrange(desc(n))
+```
+
+

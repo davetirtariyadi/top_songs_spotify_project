@@ -9,16 +9,16 @@
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "About",
+    "title": "",
     "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
+    "text": "This is About."
   },
   {
     "objectID": "eda.html",
     "href": "eda.html",
-    "title": "",
+    "title": "Exploratory Data Analysis",
     "section": "",
-    "text": "This is EDA."
+    "text": "library(tidyverse)\nlibrary(skimr)\n\ntheme_set(theme_minimal())"
   },
   {
     "objectID": "report.html",
@@ -40,5 +40,26 @@
     "title": "",
     "section": "",
     "text": "This is Proposal."
+  },
+  {
+    "objectID": "eda.html#introduction-and-data",
+    "href": "eda.html#introduction-and-data",
+    "title": "Exploratory Data Analysis",
+    "section": "Introduction and data",
+    "text": "Introduction and data\n\nDescription of data\nWe will be analyzing the top 100 songs on Spotify every year, from 2000 - 2023.\nThe dataset was taken from Kaggle. The data was extracted by Conor Van Eden using Organize Your Music. More details here.\n\n\nGlimpse of data\nLet’s take a look at the dataset using skim.\n\nsongs &lt;- read_delim(\"data/Best Songs on Spotify from 2000-2023.csv\", \n    delim = \";\", escape_double = FALSE, trim_ws = TRUE)\n\nskim(songs)\n\n\nData summary\n\n\nName\nsongs\n\n\nNumber of rows\n2385\n\n\nNumber of columns\n14\n\n\n_______________________\n\n\n\nColumn type frequency:\n\n\n\ncharacter\n3\n\n\nnumeric\n11\n\n\n________________________\n\n\n\nGroup variables\nNone\n\n\n\nVariable type: character\n\n\n\n\n\n\n\n\n\n\n\n\n\nskim_variable\nn_missing\ncomplete_rate\nmin\nmax\nempty\nn_unique\nwhitespace\n\n\n\n\ntitle\n0\n1\n1\n99\n0\n2261\n0\n\n\nartist\n0\n1\n2\n41\n0\n1014\n0\n\n\ntop genre\n0\n1\n3\n27\n0\n266\n0\n\n\n\nVariable type: numeric\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nskim_variable\nn_missing\ncomplete_rate\nmean\nsd\np0\np25\np50\np75\np100\nhist\n\n\n\n\nyear\n0\n1\n2011.12\n6.75\n1985\n2005\n2011\n2017\n2023\n▁▁▆▇▇\n\n\nbpm\n0\n1\n119.78\n27.27\n60\n98\n120\n134\n211\n▂▇▇▂▁\n\n\nenergy\n0\n1\n69.79\n16.16\n6\n59\n71\n82\n100\n▁▁▅▇▅\n\n\ndanceability\n0\n1\n67.03\n13.72\n18\n59\n68\n77\n98\n▁▂▆▇▂\n\n\ndB\n0\n1\n-5.77\n2.07\n-18\n-7\n-5\n-4\n0\n▁▁▂▇▁\n\n\nliveness\n0\n1\n17.79\n13.63\n2\n9\n12\n23\n84\n▇▂▁▁▁\n\n\nvalence\n0\n1\n54.23\n22.46\n4\n37\n54\n73\n97\n▃▆▇▇▅\n\n\nduration\n0\n1\n225.95\n43.23\n115\n200\n221\n246\n688\n▇▆▁▁▁\n\n\nacousticness\n0\n1\n15.61\n20.28\n0\n2\n7\n22\n98\n▇▂▁▁▁\n\n\nspeechiness\n0\n1\n10.11\n9.52\n2\n4\n6\n12\n58\n▇▁▁▁▁\n\n\npopularity\n0\n1\n70.53\n11.42\n5\n64\n72\n79\n98\n▁▁▂▇▃\n\n\n\n\n\nWe see that we have data on 14 variables: three are character-type and 11 are numeric-type. We have access to some basic information about the songs, including artist, release year, and genre, as well as some metrics, including danceability and speechiness."
+  },
+  {
+    "objectID": "eda.html#exploratory-data-analysis",
+    "href": "eda.html#exploratory-data-analysis",
+    "title": "Exploratory Data Analysis",
+    "section": "Exploratory data analysis",
+    "text": "Exploratory data analysis\n\nTop artists\n\ntop_artists &lt;- songs %&gt;% \n  group_by(artist) %&gt;% \n  count() %&gt;% \n  arrange(desc(n)) %&gt;% \n  head(20) \n\ntop_artists %&gt;% \n  ggplot(aes(y = fct_reorder(artist, n), x = n)) +\n  geom_bar(stat = \"identity\") +\n  labs(\n    title = \"Most common artists in the list of top songs in Spotify\",\n    y = \"\",\n    x = \"\"\n  ) +\n  theme_minimal()\n\n\n\n\nWe see that Rihanna, Drake, and Taylor Swift are the three artists with the most mentions. Here, mention refers to having a song categorized as “top” on Spotify in the 2003-2023 period. It is important to note that one song can be mentioned as “top” multiple times. As seen below, Rihanna’s Diamonds and Taylor Swift’s I Knew You Were Trouble were made it to the list of top songs twice.\n\nsongs %&gt;% \n  filter(artist %in% c(\"Rihanna\", \"Drake\", \"Taylor Swift\")) %&gt;% \n  group_by(artist, title) %&gt;% \n  count() %&gt;% \n  arrange(desc(n)) %&gt;% \n  head()\n\n# A tibble: 6 × 3\n# Groups:   artist, title [6]\n  artist       title                             n\n  &lt;chr&gt;        &lt;chr&gt;                         &lt;int&gt;\n1 Rihanna      Diamonds                          2\n2 Rihanna      Only Girl (In The World)          2\n3 Rihanna      S&M                               2\n4 Rihanna      Stay                              2\n5 Taylor Swift I Knew You Were Trouble.          2\n6 Taylor Swift Love Story (Taylor’s Version)     2\n\n\n\n\nTop genres\n\nsongs %&gt;% \n  group_by(`top genre`) %&gt;% \n  count() %&gt;% \n  arrange(desc(n)) %&gt;% \n  head(20) %&gt;% \n  ggplot(aes(y = fct_reorder(`top genre`, n), x = n)) +\n  geom_bar(stat = \"identity\") +\n  labs(\n    title = \"Most common genres in the list of top songs in Spotify\",\n    y = \"\",\n    x = \"\"\n  ) +\n  theme_minimal()\n\n\n\n\nWe see that “dance pop” and “pop” are the two most common genres within top songs by a large margin. It might be intersting to see what kind of variations exist withing these two genres when it comes to other song metrics like danceability and valence.\n\n\nMost common words in titles\n\nsongs %&gt;% \n  select(title) %&gt;% \n  separate_rows(title, sep = \" \") %&gt;% \n  unnest(title) %&gt;% \n  mutate(title = str_remove_all(title, \"[[:punct:]]\")) %&gt;%\n  filter(title != \"\") %&gt;% \n  mutate(title = tolower(title)) %&gt;% \n  group_by(title) %&gt;% \n  count() %&gt;% \n  arrange(desc(n)) %&gt;% \n  head(30) %&gt;% \n  ggplot(aes(y = fct_reorder(title, n), x = n)) +\n  geom_bar(stat = \"identity\")\n\n\n\n\nWe see that the word “feat” is very common - we love to see collaboration! Furthermore, we also see that the word “you,” “me,” and “love” are pretty common. It might be interesting to analyze this further.\n\n\nDistribution of year\n\nsongs %&gt;% \n  ggplot(aes(x = year)) +\n  geom_histogram() +\n  theme_minimal()\n\n\n\n\n\n\nDistribution of metrics\n\nsongs %&gt;% \n  select(title, bpm, energy, danceability, dB, liveness, valence, duration, acousticness, speechiness, popularity) %&gt;% \n  pivot_longer(\n    cols = -title,\n    names_to = \"metric\",\n    values_to = \"value\"\n  ) %&gt;% \n  ggplot(aes(x = value)) +\n  geom_histogram() +\n  facet_wrap(vars(metric), scales = \"free\") +\n  labs(\n    x = \"Metric\",\n    y = \"\"\n  )"
+  },
+  {
+    "objectID": "eda.html#data-limitations",
+    "href": "eda.html#data-limitations",
+    "title": "Exploratory Data Analysis",
+    "section": "Data limitations",
+    "text": "Data limitations\n\nNo indication of which year the song is “top” for.\n\n\nsongs %&gt;% \n  group_by(title) %&gt;% \n  count() %&gt;% \n  arrange(desc(n))\n\n# A tibble: 2,261 × 2\n# Groups:   title [2,261]\n   title              n\n   &lt;chr&gt;          &lt;int&gt;\n 1 Sorry              5\n 2 Beautiful          3\n 3 Burn               3\n 4 Counting Stars     3\n 5 Faded              3\n 6 Higher             3\n 7 I Like It          3\n 8 Mercy              3\n 9 One Call Away      3\n10 Angel              2\n# ℹ 2,251 more rows"
   }
 ]
