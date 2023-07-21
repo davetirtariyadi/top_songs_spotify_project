@@ -47,6 +47,16 @@ We see that we have data on 14 variables: three are character-type and 11 are nu
 
 ## TL;DR
 
+-   Rihanna, Drake, and Taylor Swift are the three artists with the most mentions.
+
+-   "Dance pop" and "pop" are the two most common genres.
+
+-   Some of the most common words in top song titles include "feat," "love," and "remix."
+
+-   There are spikes in the distribution of song release years, particular around 2004, 2007, 2011, and 2016.
+
+-   Two strong correlations include `acousticness` and `energy` and `dB` and `energy`.
+
 ## Frequency of artist appearance
 
 ```{r}
@@ -175,7 +185,12 @@ songs %>% select(year, bpm, energy,
 
 ```
 
-
+```{r}
+songs %>% 
+  filter(`top genre` %in% c("dance pop", "pop")) %>% 
+  ggplot(aes(x = `top genre`, y = valence)) +
+  geom_boxplot()
+```
 
 # Data limitations
 
