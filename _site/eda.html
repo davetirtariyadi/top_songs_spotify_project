@@ -150,18 +150,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction-and-data" id="toc-introduction-and-data" class="nav-link active" data-scroll-target="#introduction-and-data">Introduction and data</a>
+  <li><a href="#introduction-to-data" id="toc-introduction-to-data" class="nav-link active" data-scroll-target="#introduction-to-data">Introduction to data</a>
   <ul class="collapse">
-  <li><a href="#description-of-data" id="toc-description-of-data" class="nav-link" data-scroll-target="#description-of-data">Description of data</a></li>
+  <li><a href="#description-of-data" id="toc-description-of-data" class="nav-link" data-scroll-target="#description-of-data">Description of data</a>
+  <ul class="collapse">
   <li><a href="#glimpse-of-data" id="toc-glimpse-of-data" class="nav-link" data-scroll-target="#glimpse-of-data">Glimpse of data</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">Exploratory data analysis</a>
   <ul class="collapse">
-  <li><a href="#top-artists" id="toc-top-artists" class="nav-link" data-scroll-target="#top-artists">Top artists</a></li>
-  <li><a href="#top-genres" id="toc-top-genres" class="nav-link" data-scroll-target="#top-genres">Top genres</a></li>
-  <li><a href="#most-common-words-in-titles" id="toc-most-common-words-in-titles" class="nav-link" data-scroll-target="#most-common-words-in-titles">Most common words in titles</a></li>
+  <li><a href="#tldr" id="toc-tldr" class="nav-link" data-scroll-target="#tldr">TL;DR</a></li>
+  <li><a href="#frequency-of-artist-appearance" id="toc-frequency-of-artist-appearance" class="nav-link" data-scroll-target="#frequency-of-artist-appearance">Frequency of artist appearance</a></li>
+  <li><a href="#top-song-genres" id="toc-top-song-genres" class="nav-link" data-scroll-target="#top-song-genres">Top song genres</a></li>
+  <li><a href="#most-common-words-in-song-titles" id="toc-most-common-words-in-song-titles" class="nav-link" data-scroll-target="#most-common-words-in-song-titles">Most common words in song titles</a></li>
   <li><a href="#distribution-of-year" id="toc-distribution-of-year" class="nav-link" data-scroll-target="#distribution-of-year">Distribution of year</a></li>
-  <li><a href="#distribution-of-metrics" id="toc-distribution-of-metrics" class="nav-link" data-scroll-target="#distribution-of-metrics">Distribution of metrics</a></li>
+  <li><a href="#distribution-of-song-metrics" id="toc-distribution-of-song-metrics" class="nav-link" data-scroll-target="#distribution-of-song-metrics">Distribution of song metrics</a></li>
   </ul></li>
   <li><a href="#data-limitations" id="toc-data-limitations" class="nav-link" data-scroll-target="#data-limitations">Data limitations</a></li>
   </ul>
@@ -188,18 +191,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_minimal</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load relevant packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Set minimalistic theme</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_minimal</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="introduction-and-data" class="level2">
-<h2 class="anchored" data-anchor-id="introduction-and-data">Introduction and data</h2>
-<section id="description-of-data" class="level3">
-<h3 class="anchored" data-anchor-id="description-of-data">Description of data</h3>
+<section id="introduction-to-data" class="level1">
+<h1>Introduction to data</h1>
+<section id="description-of-data" class="level2">
+<h2 class="anchored" data-anchor-id="description-of-data">Description of data</h2>
 <p>We will be analyzing the top 100 songs on Spotify every year, from 2000 - 2023.</p>
 <p>The dataset was taken from Kaggle. The data was extracted by Conor Van Eden using Organize Your Music. More details <a href="https://www.kaggle.com/datasets/conorvaneden/best-songs-on-spotify-for-every-year-2000-2023?resource=download">here</a>.</p>
-</section>
+<p>No private information is being used: everything is public information. Furthermore, not much preprocessing was done (or explained) on the data.</p>
 <section id="glimpse-of-data" class="level3">
 <h3 class="anchored" data-anchor-id="glimpse-of-data">Glimpse of data</h3>
 <p>Let’s take a look at the dataset using <code>skim</code>.</p>
@@ -488,10 +494,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We see that we have data on 14 variables: three are character-type and 11 are numeric-type. We have access to some basic information about the songs, including artist, release year, and genre, as well as some metrics, including <code>danceability</code> and <code>speechiness</code>.</p>
 </section>
 </section>
-<section id="exploratory-data-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory data analysis</h2>
-<section id="top-artists" class="level3">
-<h3 class="anchored" data-anchor-id="top-artists">Top artists</h3>
+</section>
+<section id="exploratory-data-analysis" class="level1">
+<h1>Exploratory data analysis</h1>
+<section id="tldr" class="level2">
+<h2 class="anchored" data-anchor-id="tldr">TL;DR</h2>
+</section>
+<section id="frequency-of-artist-appearance" class="level2">
+<h2 class="anchored" data-anchor-id="frequency-of-artist-appearance">Frequency of artist appearance</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>top_artists <span class="ot">&lt;-</span> songs <span class="sc">%&gt;%</span> </span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(artist) <span class="sc">%&gt;%</span> </span>
@@ -501,7 +511,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>top_artists <span class="sc">%&gt;%</span> </span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">fct_reorder</span>(artist, n), <span class="at">x =</span> n)) <span class="sc">+</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">fill =</span> <span class="st">"mediumseagreen"</span>) <span class="sc">+</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Most common artists in the list of top songs in Spotify"</span>,</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">""</span>,</span>
@@ -512,7 +522,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="eda_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>We see that Rihanna, Drake, and Taylor Swift are the three artists with the most mentions. Here, mention refers to having a song categorized as “top” on Spotify in the 2003-2023 period. It is important to note that one song can be mentioned as “top” multiple times. As seen below, Rihanna’s Diamonds and Taylor Swift’s I Knew You Were Trouble were made it to the list of top songs twice.</p>
+<p>We see that Rihanna, Drake, and Taylor Swift are the three artists with the most mentions. Here, a mention refers to having a song categorized as “top” on Spotify in the 2003-2023 period. It is important to note that one song can be mentioned as “top” multiple times. As seen below, Rihanna’s Diamonds and Taylor Swift’s I Knew You Were Trouble were made it to the list of top songs twice.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>songs <span class="sc">%&gt;%</span> </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(artist <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Rihanna"</span>, <span class="st">"Drake"</span>, <span class="st">"Taylor Swift"</span>)) <span class="sc">%&gt;%</span> </span>
@@ -534,8 +544,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="top-genres" class="level3">
-<h3 class="anchored" data-anchor-id="top-genres">Top genres</h3>
+<section id="top-song-genres" class="level2">
+<h2 class="anchored" data-anchor-id="top-song-genres">Top song genres</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>songs <span class="sc">%&gt;%</span> </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="st">`</span><span class="at">top genre</span><span class="st">`</span>) <span class="sc">%&gt;%</span> </span>
@@ -543,7 +553,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n)) <span class="sc">%&gt;%</span> </span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">20</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">fct_reorder</span>(<span class="st">`</span><span class="at">top genre</span><span class="st">`</span>, n), <span class="at">x =</span> n)) <span class="sc">+</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">fill =</span> <span class="st">"mediumseagreen"</span>) <span class="sc">+</span></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Most common genres in the list of top songs in Spotify"</span>,</span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">""</span>,</span>
@@ -556,8 +566,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>We see that “dance pop” and “pop” are the two most common genres within top songs by a large margin. It might be intersting to see what kind of variations exist withing these two genres when it comes to other song metrics like <code>danceability</code> and <code>valence</code>.</p>
 </section>
-<section id="most-common-words-in-titles" class="level3">
-<h3 class="anchored" data-anchor-id="most-common-words-in-titles">Most common words in titles</h3>
+<section id="most-common-words-in-song-titles" class="level2">
+<h2 class="anchored" data-anchor-id="most-common-words-in-song-titles">Most common words in song titles</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>songs <span class="sc">%&gt;%</span> </span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(title) <span class="sc">%&gt;%</span> </span>
@@ -571,27 +581,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n)) <span class="sc">%&gt;%</span> </span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">30</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">fct_reorder</span>(title, n), <span class="at">x =</span> n)) <span class="sc">+</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">fill =</span> <span class="st">"mediumseagreen"</span>) <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">""</span>,</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Word"</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Most common words found in song titles"</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="eda_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>We see that the word “feat” is very common - we love to see collaboration! Furthermore, we also see that the word “you,” “me,” and “love” are pretty common. It might be interesting to analyze this further.</p>
 </section>
-<section id="distribution-of-year" class="level3">
-<h3 class="anchored" data-anchor-id="distribution-of-year">Distribution of year</h3>
+<section id="distribution-of-year" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-of-year">Distribution of year</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>songs <span class="sc">%&gt;%</span> </span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year)) <span class="sc">+</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">fill =</span> <span class="st">"mediumseagreen"</span>) <span class="sc">+</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="eda_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>We see that there is a somewhat symmetric distribution when it comes to the release years of top songs. However, we see some “spikes” around 2004, 2007, 2011, and 2016. It might be interesting to dive deeper to see reasons for these “spikes.”</p>
 </section>
-<section id="distribution-of-metrics" class="level3">
-<h3 class="anchored" data-anchor-id="distribution-of-metrics">Distribution of metrics</h3>
+<section id="distribution-of-song-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-of-song-metrics">Distribution of song metrics</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>songs <span class="sc">%&gt;%</span> </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(title, bpm, energy, danceability, dB, liveness, valence, duration, acousticness, speechiness, popularity) <span class="sc">%&gt;%</span> </span>
@@ -601,7 +617,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"value"</span></span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value)) <span class="sc">+</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">fill =</span> <span class="st">"mediumseagreen"</span>) <span class="sc">+</span></span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(metric), <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Metric"</span>,</span>
@@ -611,36 +627,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="eda_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</section>
-</section>
-<section id="data-limitations" class="level2">
-<h2 class="anchored" data-anchor-id="data-limitations">Data limitations</h2>
+<p>Some observations:</p>
 <ul>
-<li>No indication of which year the song is “top” for.</li>
+<li><p><code>acousticness</code> demonstrates a heavily right-skewed distribution.</p></li>
+<li><p><code>duration</code> is centered at around 220 seconds, which means most songs are around the 3-4 minutes range.</p></li>
+<li><p><code>danceability</code> showcases a symmetric distribution centred at score 70.</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>songs <span class="sc">%&gt;%</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(title) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>songs <span class="sc">%&gt;%</span> <span class="fu">select</span>(year, bpm, energy,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>         danceability, dB, liveness, </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>         valence, duration, acousticness,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>         speechiness, popularity) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">corrplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="data-limitations" class="level1">
+<h1>Data limitations</h1>
+<p>Our dataset provides a lot of information on each song, but there are certain limitations.</p>
+<ul>
+<li>There is no indication of which year a song is “top” for. Below, we see the song “Sorry” is appears five times in our dataset. But, what years were these in? 2005? 2010?</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>songs <span class="sc">%&gt;%</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(title) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n)) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2,261 × 2
-# Groups:   title [2,261]
-   title              n
-   &lt;chr&gt;          &lt;int&gt;
- 1 Sorry              5
- 2 Beautiful          3
- 3 Burn               3
- 4 Counting Stars     3
- 5 Faded              3
- 6 Higher             3
- 7 I Like It          3
- 8 Mercy              3
- 9 One Call Away      3
-10 Angel              2
-# ℹ 2,251 more rows</code></pre>
+<pre><code># A tibble: 3 × 2
+# Groups:   title [3]
+  title         n
+  &lt;chr&gt;     &lt;int&gt;
+1 Sorry         5
+2 Beautiful     3
+3 Burn          3</code></pre>
 </div>
 </div>
+<ul>
+<li>We do not have access to the song lyrics. If we did, we could so some text analysis to determine correlations between lyrics and popularity.</li>
+</ul>
 
 
 </section>

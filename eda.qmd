@@ -9,19 +9,24 @@ execute:
 ```{r}
 #| label: load-pkgs-data
 
+# Load relevant packages
 library(tidyverse)
 library(skimr)
+library(corrplot)
 
+# Set minimalistic theme
 theme_set(theme_minimal())
 ```
 
-## Introduction and data
+# Introduction to data
 
-### Description of data
+## Description of data
 
 We will be analyzing the top 100 songs on Spotify every year, from 2000 - 2023.
 
 The dataset was taken from Kaggle. The data was extracted by Conor Van Eden using Organize Your Music. More details [here](https://www.kaggle.com/datasets/conorvaneden/best-songs-on-spotify-for-every-year-2000-2023?resource=download).
+
+No private information is being used: everything is public information. Furthermore, not much preprocessing was done (or explained) on the data.
 
 ### Glimpse of data
 
@@ -38,9 +43,11 @@ skim(songs)
 
 We see that we have data on 14 variables: three are character-type and 11 are numeric-type. We have access to some basic information about the songs, including artist, release year, and genre, as well as some metrics, including `danceability` and `speechiness`.
 
-## Exploratory data analysis
+# Exploratory data analysis
 
-### Top artists
+## TL;DR
+
+## Frequency of artist appearance
 
 ```{r}
 
@@ -52,7 +59,7 @@ top_artists <- songs %>%
 
 top_artists %>% 
   ggplot(aes(y = fct_reorder(artist, n), x = n)) +
-  geom_bar(stat = "identity") +
+  geom_bar(stat = "identity", fill = "mediumseagreen") +
   labs(
     title = "Most common artists in the list of top songs in Spotify",
     y = "",
@@ -60,7 +67,8 @@ top_artists %>%
   ) +
   theme_minimal()
 ```
-We see that Rihanna, Drake, and Taylor Swift are the three artists with the most mentions. Here, mention refers to having a song categorized as "top" on Spotify in the 2003-2023 period. It is important to note that one song can be mentioned as "top" multiple times. As seen below, Rihanna's Diamonds and Taylor Swift's I Knew You Were Trouble were made it to the list of top songs twice.
+
+We see that Rihanna, Drake, and Taylor Swift are the three artists with the most mentions. Here, a mention refers to having a song categorized as "top" on Spotify in the 2003-2023 period. It is important to note that one song can be mentioned as "top" multiple times. As seen below, Rihanna's Diamonds and Taylor Swift's I Knew You Were Trouble were made it to the list of top songs twice.
 
 ```{r}
 songs %>% 
@@ -71,7 +79,7 @@ songs %>%
   head()
 ```
 
-### Top genres
+## Top song genres
 
 ```{r}
 songs %>% 
@@ -80,7 +88,7 @@ songs %>%
   arrange(desc(n)) %>% 
   head(20) %>% 
   ggplot(aes(y = fct_reorder(`top genre`, n), x = n)) +
-  geom_bar(stat = "identity") +
+  geom_bar(stat = "identity", fill = "mediumseagreen") +
   labs(
     title = "Most common genres in the list of top songs in Spotify",
     y = "",
@@ -91,7 +99,7 @@ songs %>%
 
 We see that "dance pop" and "pop" are the two most common genres within top songs by a large margin. It might be intersting to see what kind of variations exist withing these two genres when it comes to other song metrics like `danceability` and `valence`.
 
-### Most common words in titles
+## Most common words in song titles
 
 ```{r}
 songs %>% 
@@ -106,22 +114,29 @@ songs %>%
   arrange(desc(n)) %>% 
   head(30) %>% 
   ggplot(aes(y = fct_reorder(title, n), x = n)) +
-  geom_bar(stat = "identity")
+  geom_bar(stat = "identity", fill = "mediumseagreen") +
+  labs(
+    x = "",
+    y = "Word",
+    title = "Most common words found in song titles"
+  )
 
 ```
 
 We see that the word "feat" is very common - we love to see collaboration! Furthermore, we also see that the word "you," "me," and "love" are pretty common. It might be interesting to analyze this further.
 
-### Distribution of year
+## Distribution of year
 
 ```{r}
 songs %>% 
   ggplot(aes(x = year)) +
-  geom_histogram() +
+  geom_histogram(fill = "mediumseagreen") +
   theme_minimal()
 ```
 
-### Distribution of metrics
+We see that there is a somewhat symmetric distribution when it comes to the release years of top songs. However, we see some "spikes" around 2004, 2007, 2011, and 2016. It might be interesting to dive deeper to see reasons for these "spikes."
+
+## Distribution of song metrics
 
 ```{r}
 songs %>% 
@@ -132,7 +147,7 @@ songs %>%
     values_to = "value"
   ) %>% 
   ggplot(aes(x = value)) +
-  geom_histogram() +
+  geom_histogram(fill = "mediumseagreen") +
   facet_wrap(vars(metric), scales = "free") +
   labs(
     x = "Metric",
@@ -140,15 +155,40 @@ songs %>%
   )
 ```
 
-## Data limitations
+Some observations:
 
-- No indication of which year the song is "top" for.
+-   `acousticness` demonstrates a heavily right-skewed distribution.
+
+-   `duration` is centered at around 220 seconds, which means most songs are around the 3-4 minutes range.
+
+-   `danceability` showcases a symmetric distribution centred at score 70.
+
+## Correlation matrix
+
+```{r}
+songs %>% select(year, bpm, energy,
+         danceability, dB, liveness, 
+         valence, duration, acousticness,
+         speechiness, popularity) %>% 
+  cor() %>% 
+  corrplot()
+
+```
+
+
+
+# Data limitations
+
+Our dataset provides a lot of information on each song, but there are certain limitations.
+
+-   There is no indication of which year a song is "top" for. Below, we see the song "Sorry" is appears five times in our dataset. But, what years were these in? 2005? 2010?
 
 ```{r}
 songs %>% 
   group_by(title) %>% 
   count() %>% 
-  arrange(desc(n))
+  arrange(desc(n)) %>% 
+  head(3)
 ```
 
-
+-   We do not have access to the song lyrics. If we did, we could so some text analysis to determine correlations between lyrics and popularity.
